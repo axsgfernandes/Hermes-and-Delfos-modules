@@ -1,0 +1,147 @@
+{% extends 'layout.html' %}
+
+{% block head %}
+<meta charset="utf-8">
+<title>Hermes</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.1/css/all.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+<script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<style>
+    .nav-tabs {
+        border-bottom: 1px solid #dee2e6;
+    }
+    .nav {
+        display: -ms-flexbox;
+        display: flex;
+        -ms-flex-wrap: wrap;
+        flex-wrap: wrap;
+        padding-left: 0;
+        margin-bottom: 0;
+        list-style: none;
+    }
+    .nav-tabs .nav-link.active {
+        color: #D67D39;
+        background-color: #fff;
+        border-color: #dee2e6 #dee2e6 #fff;
+    }
+    .nav-tabs .nav-link {
+        border: 1px solid transparent;
+        border-top-left-radius: .25rem;
+        border-top-right-radius: .25rem;
+    }
+    .nav-tabs .nav-item {
+        margin-bottom: -1px;
+    }
+    .nav-link {
+        display: block;
+        padding: .5rem 1rem;
+    }
+    a {
+        color: #4a536e;
+        text-decoration: none;
+        background-color: transparent;
+    }
+    a:focus, a:hover {
+        color: #D67D39;
+        text-decoration: underline;
+    }
+    .custom-file-label::after {
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        z-index: 3;
+        display: block;
+        height: calc(1.5em + .75rem);
+        padding: .375rem .75rem;
+        line-height: 1.5;
+        color: #495057;
+        content: " ";
+        border-left: 0;
+        background-color: #fff;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<h2>Hermes</h2>
+<div style="text-align: center">
+    <div class="nav nav-tabs">
+        <a href="/home/local" class="nav-item nav-link">Database</a>
+        <a href="{{ url_for('quality_rule_tab') }}" class="nav-item nav-link">Quality rule</a>
+        <a href="{{ url_for('search_tab') }}" class="nav-item nav-link">Search</a>
+        <a href="{{ url_for('results_tab') }}" class="nav-item nav-link active">Results</a>
+    </div>
+    <form action="{{ url_for('results_tab') }}" method="post" style="margin-top: 34px;" id="download_form">
+        <!--TABLE WITH RESULTS FROM JOBS - result after search -->
+        <div class="row">
+            <div class="col-sm-12">
+                <table class="table table-striped" style="padding: 0.5rem;">
+                    <thead style="text-align: center; color: #212529;">
+                    <tr>
+                        <th scope="col" style="font-weight: 500;">Job name</th>
+                        <th scope="col" style="font-weight: 500;">Date</th>
+                        <th scope="col" style="font-weight: 500;">Time</th>
+                        <th scope="col" style="font-weight: 500;">Type of source</th>
+                        <th scope="col" style="font-weight: 500;">Parameter</th>
+                        <th scope="col" style="font-weight: 500;">Value</th>
+                        <th scope="col" style="font-weight: 500;">Quality rules</th>
+                        <th scope="col"></th>
+                    </tr>
+                    </thead>
+                    <tbody style="text-align: center;">
+                    {% for job in jobs %}
+                        <tr>
+                            <td style="font-weight: normal;">{{ job[0] }}</td>
+                            <td style="font-weight: normal;">{{ job[1] }}</td>
+                            <td style="font-weight: normal;">{{ job[2] }}</td>
+                            <td style="font-weight: normal;">{{ job[3] }}</td>
+                            <td style="font-weight: normal;">{{ job[4] }}</td>
+                            <td style="font-weight: normal;">{{ job[5] }}</td>
+                            <td style="font-weight: normal;">{{ job[6] }}</td>
+                            <td><input class="form-check-input" type="radio" name="download" value="{{ job[7] }}">
+                                <a class="delete" title="Delete" id="{{ job[7] }}"><i class="fa fa-trash" style="color:#D5133A; font-size: 21px;padding-left: 7px;"></i></a></td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <br>
+        <p style="text-align: right">
+            <input type="button" value="Clear the form" onclick="Clear()" style="background-color: rgba(0,0,0,0.25); width: 12%; border-color: rgba(0,0,0,0.25); border: 1px solid transparent; padding: .375rem .75rem; font-size: 1rem; line-height: 1.5; border-radius: .25rem; color: #ffffff">
+            <input type="submit" value="Download" style="background-color: #D67D39; width: 12%; border-color: #D67D39; border: 1px solid transparent; padding: .375rem .75rem; font-size: 1rem; line-height: 1.5; border-radius: .25rem; color: #ffffff">
+        </p>
+    </form>
+</div>
+<script>
+    function Clear() {
+        let ele = document.getElementsByName("download")
+        for (let i=0; i<ele.length;i++)
+            ele[i].checked = false;
+    }
+
+    $('#download_form').submit(function(e) {
+
+        let roleChecked = $("input[name='download']:checked").length;
+
+        if (!roleChecked) {
+            alert("You must check one option from the presented table!");
+            e.preventDefault();
+            return false;
+        }
+    });
+
+    $(document).on("click", ".delete", function(){
+        $(this).parents("tr").remove();
+        $(".add-new").removeAttr("disabled");
+        let id = $(this).attr("id");
+        let string = id;
+        $.post("/delete", { string: string});
+    });
+</script>
+{% endblock %}

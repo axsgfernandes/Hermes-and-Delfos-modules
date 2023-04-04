@@ -1,0 +1,42 @@
+version: '3'
+
+services:
+  python-app:
+    container_name: hermes
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "5000:5000"
+    restart: unless-stopped
+    depends_on:
+      - mysql
+    networks:
+      - hadoop
+  mysql:
+    container_name: hermes_mysql
+    image: mysql/mysql-server:5.7
+    restart: always
+    environment:
+      MYSQL_DATABASE: 'register'
+      # So you don't have to use root, but you can if you like
+      MYSQL_USER: 'python'
+      # You can use whatever password you like
+      MYSQL_PASSWORD: '123456'
+      # Password for root access
+      MYSQL_ROOT_PASSWORD: 'password'
+    ports:
+      # <Port exposed> : < MySQL Port running inside container>
+      - '3307:3306'
+    networks:
+      - hadoop
+    expose:
+      # Opens port 3306 on the container
+      - '3306'
+      # Where our data will be persisted
+    volumes:
+      - ./mysql/data:/var/lib/mysql
+      - ./mysql/init:/docker-entrypoint-initdb.d/:ro
+networks:
+  hadoop:
+    external: true

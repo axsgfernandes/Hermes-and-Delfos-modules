@@ -1,0 +1,357 @@
+{% extends 'layout.html' %}
+
+{% block head %}
+<meta charset="utf-8">
+<title>Delfos</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.1/css/all.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/css/bootstrap.min.css"
+  integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+<script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
+  integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+  integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/js/bootstrap.min.js"
+  integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+
+<!--<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>-->
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<!--<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">-->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+
+
+<style>
+  .nav-tabs .nav-item.show .nav-link,
+  .nav-tabs .nav-link.active {
+    color: #D67D39;
+    background-color: #fff;
+    border-color: #dee2e6 #dee2e6 #fff;
+  }
+
+  a {
+    color: #4a536e;
+    text-decoration: none;
+    background-color: transparent;
+  }
+
+  a:focus,
+  a:hover {
+    color: #D67D39;
+    text-decoration: underline;
+  }
+
+  .custom-file-label::after {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 3;
+    display: block;
+    height: calc(1.5em + .75rem);
+    padding: .375rem .75rem;
+    line-height: 1.5;
+    color: #495057;
+    content: " ";
+    border-left: 0;
+    background-color: #fff;
+  }
+
+  .box {
+    display: none;
+  }
+
+  .pagination {
+    margin: 0;
+  }
+
+  .pagination li:hover {
+    cursor: pointer;
+  }
+
+  .header_wrap {
+    padding: 30px 0;
+  }
+
+  .num_rows {
+    width: 20%;
+    float: left;
+  }
+
+  .tb_search {
+    width: 20%;
+    float: right;
+  }
+
+  .pagination-container {
+    width: 70%;
+    float: left;
+  }
+
+  .rows_count {
+    width: 20%;
+    float: right;
+    text-align: right;
+    color: #999;
+  }
+
+  .pagination>li:first-child>a,
+  .pagination>li:first-child>span {
+    margin-left: 0;
+    border-top-left-radius: 4px;
+    border-bottom-left-radius: 4px;
+  }
+
+  .pagination>.active>a,
+  .pagination>.active>a:focus,
+  .pagination>.active>a:hover,
+  .pagination>.active>span,
+  .pagination>.active>span:focus,
+  .pagination>.active>span:hover {
+    z-index: 3;
+    color: #fff;
+    cursor: default;
+    background-color: #D67D39;
+    border-color: #D67D39;
+  }
+
+  .pagination>li>a,
+  .pagination>li>span {
+    position: relative;
+    float: left;
+    padding: 6px 12px;
+    margin-left: -1px;
+    line-height: 1.42857143;
+    color: #4a536e;
+    text-decoration: none;
+    background-color: #fff;
+    border: 1px solid #ddd;
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<!--<h2>Delfos</h2>
+<br>-->
+<div class="card card-body">
+  <h5 style="text-align: left; color: #212529; padding-bottom: 15px; font-weight: 500;">Query Results</h5>
+  <div class="container">
+    <div class="header_wrap">
+      <div class="num_rows">
+
+        <div class="form-group">
+          <!--		Show Numbers Of Rows 		-->
+          <select class="form-control" name="state" id="maxRows">
+            <option value="5">5</option>
+            <option value="10">10</option>
+            <option value="15">15</option>
+            <option value="20">20</option>
+            <option value="50">50</option>
+            <option value="5000">Show ALL Rows</option>
+          </select>
+
+        </div>
+      </div>
+      <div class="tb_search">
+        <input type="text" id="search_input_all" onkeyup="FilterkeyWord_all_table()" placeholder="Search.."
+          class="form-control">
+      </div>
+    </div>
+    <table class="table table-striped table-class table-responsive" id="table-id">
+
+      <thead>
+
+        <tr>
+          {% for col in column_names %}
+          <th>
+
+            {{col}}
+
+          </th>
+          {% endfor %}
+        </tr>
+
+      </thead>
+      <tbody>
+        {% for row in row_data %}
+        <tr>
+          {% for col, row_ in zip(column_names, row) %}
+          <td>{{row_}}</td>
+          {% endfor %}
+        </tr>
+        {% endfor %}
+
+      </tbody>
+
+    </table>
+
+    <!--		Start Pagination -->
+    <div class='pagination-container'>
+      <nav>
+        <ul class="pagination">
+          <!--	Here the JS Function Will Add the Rows -->
+        </ul>
+      </nav>
+    </div>
+    <div class="rows_count">Showing 11 to 20 of 91 entries</div>
+
+  </div> <!-- 		End of Container -->
+
+</div>
+
+<div class="card-body">
+  <h6 style="color:#4a536e; border-bottom: 1px solid #e0e0e3; padding-bottom: 15px;">In which format:</h6>
+  <form method="POST" style="padding-top: 15px;" action="{{ url_for('results', job_id=job_id ) }}">
+    <label class="radio-inline" style="font-size: 17px; ">
+      <input type="radio" name="option" value="csv">
+      <img src="{{url_for('static', filename='csv.png')}}" alt="only csv" style="margin: 0 0 0 20px;">
+    </label>
+    <label class="radio-inline" style="font-size: 17px; padding-left: 10%;">
+      <input type="radio" name="option" value="json">
+      <img src="{{url_for('static', filename='json.jpg')}}" alt="only json"
+        style="padding-top: 2%; height: 62px; width: 58px; margin: 0 0 0 20px;">
+    </label>
+    <input type="submit" value="Export"
+      style="margin-top: 12px; float:right; background-color: #D67D39; width: 12%; border-color: #D67D39; border: 1px solid transparent; padding: .375rem .75rem; font-size: 1rem; line-height: 1.5; border-radius: .25rem; color: #ffffff">
+  </form>
+</div>
+
+<script>
+  
+  getPagination('#table-id');
+  $('#maxRows').trigger('change');
+  function getPagination(table) {
+
+    $('#maxRows').on('change', function () {
+      $('.pagination').html('');
+      var trnum = 0;
+      var maxRows = parseInt($(this).val());
+
+      var totalRows = $(table + ' tbody tr').length;
+      $(table + ' tr:gt(0)').each(function () {
+        trnum++;
+        if (trnum > maxRows) {
+
+          $(this).hide();
+        } if (trnum <= maxRows) { $(this).show(); }
+      });
+      if (totalRows > maxRows) {
+        var pagenum = Math.ceil(totalRows / maxRows);
+        //	numbers of pages 
+        for (var i = 1; i <= pagenum;) {			// for each page append pagination li 
+          $('.pagination').append('<li data-page="' + i + '">\
+								      <span>'+ i++ + '<span class="sr-only">(current)</span></span>\
+								    </li>').show();
+        }											// end for i 
+
+
+      } 												// end if row count > max rows
+      $('.pagination li:first-child').addClass('active'); // add active class to the first li 
+
+
+      //SHOWING ROWS NUMBER OUT OF TOTAL DEFAULT
+      showig_rows_count(maxRows, 1, totalRows);
+      //SHOWING ROWS NUMBER OUT OF TOTAL DEFAULT
+
+      $('.pagination li').on('click', function (e) {		// on click each page
+        e.preventDefault();
+        var pageNum = $(this).attr('data-page');	// get it's number
+        var trIndex = 0;							// reset tr counter
+        $('.pagination li').removeClass('active');	// remove active class from all li 
+        $(this).addClass('active');					// add active class to the clicked 
+
+
+        //SHOWING ROWS NUMBER OUT OF TOTAL
+        showig_rows_count(maxRows, pageNum, totalRows);
+        //SHOWING ROWS NUMBER OUT OF TOTAL
+
+
+
+        $(table + ' tr:gt(0)').each(function () {		// each tr in table not the header
+          trIndex++;								// tr index counter 
+          // if tr index gt maxRows*pageNum or lt maxRows*pageNum-maxRows fade if out
+          if (trIndex > (maxRows * pageNum) || trIndex <= ((maxRows * pageNum) - maxRows)) {
+            $(this).hide();
+          } else { $(this).show(); } 				//else fade in 
+        }); 										// end of for each tr in table
+      });										// end of on click pagination list
+    });
+    // end of on select change 
+    // END OF PAGINATION 
+  }
+
+  // SI SETTING
+  $(function () {
+    // Just to append id number for each row  
+    default_index();
+  });
+  //ROWS SHOWING FUNCTION
+  function showig_rows_count(maxRows, pageNum, totalRows) {
+    //Default rows showing
+    var end_index = maxRows * pageNum;
+    var start_index = ((maxRows * pageNum) - maxRows) + parseFloat(1);
+    var string = 'Showing ' + start_index + ' to ' + end_index + ' of ' + totalRows + ' entries';
+    $('.rows_count').html(string);
+  }
+  // CREATING INDEX
+  function default_index() {
+    $('table tr:eq(0)').prepend('<th> ID </th>')
+
+    var id = 0;
+
+    $('table tr:gt(0)').each(function () {
+      id++
+      $(this).prepend('<td>' + id + '</td>');
+    });
+  }
+  // All Table search script
+  function FilterkeyWord_all_table() {
+
+    // Count td if you want to search on all table instead of specific column
+
+    var count = $('.table').children('tbody').children('tr:first-child').children('td').length;
+
+    // Declare variables
+    var input, filter, table, tr, td, i;
+    input = document.getElementById("search_input_all");
+    var input_value = document.getElementById("search_input_all").value;
+    filter = input.value.toLowerCase();
+    if (input_value != '') {
+      table = document.getElementById("table-id");
+      tr = table.getElementsByTagName("tr");
+
+      // Loop through all table rows, and hide those who don't match the search query
+      for (i = 1; i < tr.length; i++) {
+
+        var flag = 0;
+
+        for (j = 0; j < count; j++) {
+          td = tr[i].getElementsByTagName("td")[j];
+          if (td) {
+
+            var td_text = td.innerHTML;
+            if (td.innerHTML.toLowerCase().indexOf(filter) > -1) {
+              //var td_text = td.innerHTML;  
+              //td.innerHTML = 'shaban';
+              flag = 1;
+            } else {
+              //DO NOTHING
+            }
+          }
+        }
+        if (flag == 1) {
+          tr[i].style.display = "";
+        } else {
+          tr[i].style.display = "none";
+        }
+      }
+    } else {
+      //RESET TABLE
+      $('#maxRows').trigger('change');
+    }
+  }
+</script>
+
+
+{% endblock %}

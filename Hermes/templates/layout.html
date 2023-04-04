@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<head>
+    {% block head %}{% endblock %}
+</head>
+<body class="loggedin">
+<nav class="navtop">
+    <div style="float: right">
+        <h1></h1>
+        <a href="{{ url_for('home') }}"><i class="fas fa-home"></i>Home</a>
+        <a href="#"><i class="fas fa-user-circle"></i>id: user{{ id }}</a>
+        <a href="{{ url_for('logout') }}"><i class="fas fa-sign-out-alt"></i>Logout</a>
+    </div>
+</nav>
+<div class="content" style="width: 1400px">
+    {% block content %}{% endblock %}
+</div>
+</body>
+</html>

@@ -1,0 +1,11 @@
+flask
+pymysql
+sqlalchemy
+passlib
+hdfs
+Werkzeug
+pandas
+pyspark
+pytz
+biopython
+bio

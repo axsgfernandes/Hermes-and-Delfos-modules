@@ -1,0 +1,318 @@
+{% extends 'layout.html' %}
+
+{% block head %}
+<meta charset="utf-8">
+<title>Delfos</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.1/css/all.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/css/bootstrap.min.css"
+    integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+<script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
+    integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
+    crossorigin="anonymous"></script>
+
+<style>
+    .nav-tabs {
+        border-bottom: 1px solid #dee2e6;
+    }
+
+    .nav {
+        display: -ms-flexbox;
+        display: flex;
+        -ms-flex-wrap: wrap;
+        flex-wrap: wrap;
+        padding-left: 0;
+        margin-bottom: 0;
+        list-style: none;
+    }
+
+    .nav-tabs .nav-link.active {
+        color: #D67D39;
+        background-color: #fff;
+        border-color: #dee2e6 #dee2e6 #fff;
+    }
+
+    .nav-tabs .nav-link {
+        border: 1px solid transparent;
+        border-top-left-radius: .25rem;
+        border-top-right-radius: .25rem;
+    }
+
+    .nav-tabs .nav-item {
+        margin-bottom: -1px;
+    }
+
+    .nav-link {
+        display: block;
+        padding: .5rem 1rem;
+    }
+
+    a {
+        color: #4a536e;
+        text-decoration: none;
+        background-color: transparent;
+    }
+
+    a:focus,
+    a:hover {
+        color: #D67D39;
+        text-decoration: underline;
+    }
+
+    .custom-file-label::after {
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        z-index: 3;
+        display: block;
+        height: calc(1.5em + .75rem);
+        padding: .375rem .75rem;
+        line-height: 1.5;
+        color: #495057;
+        content: " ";
+        border-left: 0;
+        background-color: #fff;
+    }
+</style>
+
+<!-- jQuery querybuilder JS e CSS -->
+
+<!--<link rel="stylesheet" href="{{ url_for('static', filename='style_QB.css') }}" />-->
+
+<link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+</style>
+
+<script src="https://cdn.jsdelivr.net/jquery/3.1.1/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+<!-- jQuery querybuilder plugin -->
+<!--<script src="https://cdn.jsdelivr.net/jquery.query-builder/2.4.1/js/query-builder.standalone.min.js"></script>-->
+<script src="{{ url_for('static', filename='query-builder.standalone.min.js') }}"></script>
+<link rel="stylesheet" type="text/css"
+    href="https://cdn.jsdelivr.net/jquery.query-builder/2.4.1/css/query-builder.default.min.css">
+</style>
+
+<!--<script src="{{ url_for('static', filename='script.js') }}"></script>-->
+<script src="../static/script.js"></script>
+
+{% endblock %}
+
+{% block content %}
+
+<style>
+    .btn-warning {
+        color: #fff;
+        background-color: #f0ad4e;
+        border-color: #eea236;
+    }
+
+    .query-builder .btn-danger {
+        color: #FFF;
+        font-weight: bold;
+        background-color: #f96b68;
+        border-color: #f96b68;
+    }
+
+    .btn-success {
+        color: #fff;
+        font-weight: bold;
+        background-color: #68c968;
+        border-color: #68c968;
+    }
+
+    .btn-success:hover {
+        color: #fff;
+        background-color: #449d44;
+        border-color: #449d44;
+    }
+
+    .query-builder .rule-container,
+    .query-builder .rule-placeholder,
+    .query-builder .rules-group-container {
+        position: relative;
+        margin: 4px 0;
+        border-radius: 5px;
+        padding: 10px;
+        border: 1px solid rgb(188 223 244 / 80%);
+        background: rgb(188 223 244 / 80%);
+    }
+
+    .query-builder .rules-group-container {
+        padding: 10px 10px 6px;
+        border: 1px solid #FFFF;
+        background-color: #FFFF;
+    }
+
+    .btn-primary {
+        color: #fff;
+        background-color: #c6c2c2;
+        border-color: #c6c2c2;
+    }
+
+    .btn-primary.active,
+    .btn-primary:active,
+    .open>.dropdown-toggle.btn-primary {
+        color: #fff;
+        background-color: #4a536e;
+        border-color: #4a536e;
+    }
+
+    .btn-primary.active.focus,
+    .btn-primary.active:focus,
+    .btn-primary.active:hover,
+    .btn-primary:active.focus,
+    .btn-primary:active:focus,
+    .btn-primary:active:hover,
+    .open>.dropdown-toggle.btn-primary.focus,
+    .open>.dropdown-toggle.btn-primary:focus,
+    .open>.dropdown-toggle.btn-primary:hover {
+        color: #fff;
+        background-color: #4a536e;
+        border-color: #4a536e;
+    }
+
+    .btn-primary.active,
+    .btn-primary:active,
+    .open>.dropdown-toggle.btn-primary {
+        color: #fff;
+        background-color: #4a536e;
+        /*border-color: #4a536e;*/
+    }
+
+    .btn-primary:hover {
+        color: #fff;
+        background-color: #4a536e;
+        border-color: #4a536e;
+    }
+
+    .btn-primary.disabled.focus,
+    .btn-primary.disabled:focus,
+    .btn-primary.disabled:hover,
+    .btn-primary[disabled].focus,
+    .btn-primary[disabled]:focus,
+    .btn-primary[disabled]:hover,
+    fieldset[disabled] .btn-primary.focus,
+    fieldset[disabled] .btn-primary:focus,
+    fieldset[disabled] .btn-primary:hover {
+        background-color: #c6c2c2;
+        border-color: #c6c2c2;
+    }
+
+    .btn-group-xs>.btn,
+    .btn-xs {
+        padding: 1px 7px;
+        font-size: 12px;
+        line-height: 2.4;
+        border-radius: 4px;
+        padding-right: 12px;
+    }
+
+    .btn-primary:not(:disabled):not(.disabled).active,
+    .btn-primary:not(:disabled):not(.disabled):active,
+    .show>.btn-primary.dropdown-toggle {
+        color: #fff;
+        background-color: rgb(0 123 255 / 65%);
+        border-color: rgb(0 123 255 / 65%);
+    }
+
+    .glyphicon-remove:before {
+        content: "\e014";
+        vertical-align: middle;
+    }
+
+    .glyphicon-plus:before {
+        content: "\002b";
+        vertical-align: text-bottom;
+    }
+
+    .glyphicon-plus-sign:before {
+        content: "\e081";
+        vertical-align: text-bottom;
+    }
+</style>
+
+<h2>Delfos</h2>
+<div>
+    <div class="nav nav-tabs">
+        <a href="/home/import_query/{{job_id}}" class="nav-item nav-link">Import Query</a>
+        <a href="{{ url_for('query_builder', job_id=job_id) }}" class="nav-item nav-link active">Query Builder</a>
+    </div>
+    <br>
+    <form>
+
+        <div id="builder"></div>
+        <div class="btn-group">
+            <!--<button class="btn btn-warning" id="btn-reset">Reset</button>-->
+            <!--<button class="btn btn-primary" id="btn-get">Get rules</button>-->
+            <!-- <button type="submit" class="btn btn-primary" name="get-sql" id=" btn-get-sql">Get SQL rules</button>-->
+            <!--  <button type="submit" class="btn btn-primary parse-sql" id="" data
+                target="import_export">getSQL</button>-->
+            <!--<div id="query">Your query will appear here</div>-->
+        </div>
+
+        <p style="text-align: right;"><input type="submit" class="btn parse-sql" id="btn-get-sql" name="btn-get-sql"
+                data target="import_export" value="Proceed"
+                style="background-color: #D67D39; width: 12%; border-color: #D67D39; border: 1px solid transparent; padding: .375rem .75rem; font-size: 1.5rem; line-height: 1.5; border-radius: .25rem; color: #ffffff">
+        </p>
+        <div id="query"></div>
+
+    </form>
+</div>
+
+<script>
+
+    $('#btn-get-sq').on('click', function () {
+        var result = $('#builder').queryBuilder('getSQL', false);
+        console.log(result)
+
+        if (result.sql.length) {
+            $.post(
+                "/get_SQL/<job_id>",
+                { result: result.sql }
+            ).done(function (reply) {
+                $('#query').empty().append(reply);
+            });
+
+        }
+
+        /*$('#query').html('SELECT * FROM TABLENAME' + '<br>' + 'WHERE ' + result.sql);
+    */
+    });
+
+    $('#btn-get-sql').on('click', function (event) {
+
+        var result = $('#builder').queryBuilder('getSQL', false);
+        console.log(result)
+        event.preventDefault();
+        //event.stopImmediatePropagation();  
+        if (result.length) {
+            $.ajax({
+                type: "POST",
+                url: "{{ url_for('get_SQL', job_id=job_id) }}",
+                //data: { result: result.sql }
+                async: true,
+                dataType: 'json',
+                contentType: 'application/json',
+                data: JSON.stringify(result),
+                success: onSuccess
+
+            })
+        }
+
+        $('#query').html(result.sql);
+        var onSuccess = function (data) {
+            console.log('Success');
+            window.location.assign = "{{ url_for('results_builder', job_id=job_id) }}";
+
+        };
+        //window.history.pushState("","", "/test.html")
+        //$('#btn-get-sql').load('/results_builder/{{rules}}')
+        //event.preventDefault();
+        // window.location = "/results_builder/{{job_id}}"
+        //window.location = "{{ url_for('results_builder', job_id=job_id) }}";
+    });
+
+
+</script>
+{% endblock %}

@@ -1,0 +1,224 @@
+{% extends 'layout.html' %}
+
+{% block head %}
+<meta charset="utf-8">
+<title>Hermes</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.1/css/all.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+<script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ho+j7jyWK8fNQe+A12Hb8AhRq26LrZ/JpcUGGOn+Y7RsweNrtN/tE3MoK7ZeZDyx" crossorigin="anonymous"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<style>
+    .nav-tabs {
+        border-bottom: 1px solid #dee2e6;
+    }
+    .nav {
+        display: -ms-flexbox;
+        display: flex;
+        -ms-flex-wrap: wrap;
+        flex-wrap: wrap;
+        padding-left: 0;
+        margin-bottom: 0;
+        list-style: none;
+    }
+    .nav-tabs .nav-link.active {
+        color: #D67D39;
+        background-color: #fff;
+        border-color: #dee2e6 #dee2e6 #fff;
+    }
+    .nav-tabs .nav-link {
+        border: 1px solid transparent;
+        border-top-left-radius: .25rem;
+        border-top-right-radius: .25rem;
+    }
+    .nav-tabs .nav-item {
+        margin-bottom: -1px;
+    }
+    .nav-link {
+        display: block;
+        padding: .5rem 1rem;
+    }
+    a {
+        color: #4a536e;
+        text-decoration: none;
+        background-color: transparent;
+    }
+    a:focus, a:hover {
+        color: #D67D39;
+        text-decoration: underline;
+    }
+    .custom-file-label::after {
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        z-index: 3;
+        display: block;
+        height: calc(1.5em + .75rem);
+        padding: .375rem .75rem;
+        line-height: 1.5;
+        color: #495057;
+        content: " ";
+        border-left: 0;
+        background-color: #fff;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<h2>Hermes</h2>
+<div style="text-align: center">
+    <div class="nav nav-tabs">
+        <a href="/home/local" class="nav-item nav-link">Database</a>
+        <a href="{{ url_for('quality_rule_tab') }}" class="nav-item nav-link">Quality rule</a>
+        <a href="{{ url_for('search_tab') }}" class="nav-item nav-link active">Search</a>
+        <a href="{{ url_for('results_tab') }}" class="nav-item nav-link">Results</a>
+    </div>
+    <form action="{{ url_for('search_tab') }}" method="post" id="search_form">
+        <div class="row">
+            <div class="col-sm-3" style="flex: 0 0 20%;">
+                <h5 style="text-align: left; padding-top: 35px; padding-left: 15px; font-size: 16px; font-weight: 450">Parameter's name</h5>
+            </div>
+            <div class="col-sm-6" style="text-align: right;padding-left: 0px; padding-right: 0px; padding-top: 30px">
+                <select name="parameterName" id="parameterName" required class="form-control">
+                    <option value="" selected disabled hidden>Choose one (attribute - class)</option>
+                    <option value="variant_name">variant_name - variation</option>
+                    <option value="variant_id">variant_id - variation</option>
+                    <option value="chromosome">chromosome - variation</option>
+                    <option value="gene">gene - gene</option>
+                    <option value="variant_type">variant_type - variation</option>
+                    <option value="description">description - variation</option>
+                    <option value="polyphen_prediction">polyphen_prediction - variation</option>
+                    <option value="sift_prediction">sift_prediction - variation</option>
+                    <option value="hgvs">hgvs - hgvs</option>
+                    <option value="assembly">assembly - assembly</option>
+                    <option value="assembly_date">date - assembly</option>
+                    <option value="start">start - assembly</option>
+                    <option value="end">end - assembly</option>
+                    <option value="ref">ref - assembly</option>
+                    <option value="alt">alt - assembly</option>
+                    <option value="risk_allele">risk_allele - assembly</option>
+                    <option value="phenotype">phenotype - phenotype</option>
+                    <option value="clinical_actionability">clinical_actionability - phenotype</option>
+                    <option value="classification">classification - phenotype</option>
+                    <option value="clinical_significance">clinical_significance - interpretation</option>
+                    <option value="method">method - interpretation</option>
+                    <option value="assertion_criteria">assertion_criteria - interpretation</option>
+                    <option value="level_certainty">level_certainty - interpretation</option>
+                    <option value="date">date - interpretation</option>
+                    <option value="author">author - interpretation</option>
+                    <option value="origin">origin - interpretation</option>
+                    <option value="title">title - bibliography</option>
+                    <option value="year">year - bibliography</option>
+                    <option value="authors">authors - bibliography</option>
+                    <option value="pmid">pmid - bibliography</option>
+                    <option value="is_gwas">is_gwas - bibliography</option>
+                    <option value="name">name - databank</option>
+                    <option value="url">url - databank</option>
+                    <option value="version">version - databank</option>
+                    <option value="databanks_variant_id">variant_id - databank</option>
+                    <option value="clinvar_accession">clinvar_accession - databank</option>
+                </select>
+                <label for="parameterName" style="margin-top: 30px; text-align: left;"></label>
+            </div>
+            <div class="col-sm-3" style="text-align: left;"></div>
+        </div>
+        <div class="row">
+            <div class="col-sm-3" style="flex: 0 0 20%;">
+                <h5 style="text-align: left; padding-top: 6px; padding-left: 15px; font-size: 16px; font-weight: 450">Value</h5>
+            </div>
+            <div class="col-sm-6" style="text-align: right;padding-left: 0px; padding-right: 0px;">
+                <input type="text"class="form-control" id="value" name="value" required/>
+                <label for="value" style="margin-top: 30px; text-align: left;"></label>
+            </div>
+            <div class="col-sm-3" style="text-align: left;"></div>
+        </div>
+        <!--TABLE WITH RESULTS FROM DATABSE AND QUALITY RULE TABS -->
+        <div class="row">
+            <div class="col-sm-6">
+                <table class="table table-striped" style="padding: 0.5rem;">
+                    <thead style="text-align: left; color: #212529;">
+                    <tr>
+                        <th scope="col" style="font-weight: 500;">Data</th>
+                        <th scope="col"></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for d in data %}
+                    <tr>
+                        <td style="text-align: left;padding-left: 12px; font-weight: normal;">{{ d[0] }}</td>
+                        <td><input class="form-check-input" type="checkbox" name="checkboxData" value="{{ d[1] }}">
+                            <a class="delete_raw_data" title="Delete" id="{{ d[1] }}"><i class="fa fa-trash" style="color:#D5133A; font-size: 21px;padding-left: 7px;"></i></a></td>
+                    </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            <div class="col-sm-6">
+                <table class="table table-striped" style="padding: 0.5rem;">
+                    <thead style="text-align: left; color: #212529;">
+                    <tr>
+                        <th scope="col" style="font-weight: 500;">Quality rules</th>
+                        <th scope="col"></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for qr in data_QR %}
+                    <tr>
+                        <td style="text-align: left;padding-left: 12px; font-weight: normal;">{{ qr[0] }}</td>
+                        <td><input class="form-check-input" type="checkbox" name="checkboxQR" value="{{ qr[1] }}">
+                            <a class="delete" title="Delete" id="{{ qr[1] }}"><i class="fa fa-trash" style="color:#D5133A; font-size: 21px;padding-left: 7px;"></i></a></td>
+                    </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <br>
+        <p style="text-align: right;"><input type="submit" value="Submit" style="background-color: #D67D39; width: 12%; border-color: #D67D39; border: 1px solid transparent; padding: .375rem .75rem; font-size: 1rem; line-height: 1.5; border-radius: .25rem; color: #ffffff"></p>
+    </form>
+    <div class="container">
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="alert alert-warning alert-dismissible">
+                        <button type="button" class="close" data-dismiss="alert">&times;</button>
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+    </div>
+</div>
+<script>
+    $('#search_form').submit(function(e) {
+
+        let roleChecked = $("input[name='checkboxData']:checked").length;
+
+        if (!roleChecked) {
+            alert("You must check at least one option in Data table!");
+            e.preventDefault();
+            return false;
+        }
+    });
+
+    $(document).on("click", ".delete", function(){
+        $(this).parents("tr").remove();
+        $(".add-new").removeAttr("disabled");
+        let id = $(this).attr("id");
+        let string = id;
+        $.post("/delete", { string: string});
+    });
+
+    $(document).on("click", ".delete_raw_data", function(){
+        $(this).parents("tr").remove();
+        $(".add-new").removeAttr("disabled");
+        let id = $(this).attr("id");
+        let raw_data = id;
+        $.post("/delete_raw_data", { raw_data: raw_data});
+    });
+</script>
+{% endblock %}
